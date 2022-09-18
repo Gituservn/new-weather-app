@@ -45,18 +45,18 @@ const formatCurrentWeather = (data) => {
 
 const formatForecastWeather = (data) => {
     let {timezone, daily, hourly} = data;
-    daily = daily.slice(1.6).map(d => {
+    daily = daily.slice(1, 6).map((d) => {
         return {
-            title: formatToLocalTime(d.dt, timezone, 'ccc'),
+            title: formatToLocalTime(d.dt, timezone, "ccc"),
             temp: d.temp.day,
-            icon: d.weather[0].icon
+            icon: d.weather[0].icon,
         };
     });
 
-    hourly = hourly.slice(1.6).map(d => {
+    hourly = hourly.slice(1,6).map((d) => {
         return {
             title: formatToLocalTime(d.dt, timezone, 'hh:mm a'),
-            temp: d.temp.day,
+            temp: d.temp,
             icon: d.weather[0].icon
         };
     });
@@ -73,7 +73,7 @@ const getFormattedWeatherData = async (searchParams) => {
     const {lat, lon} = formattedCurrentWeather;
 
     const formattedForecastWeather = await getWeatherData('onecall', {
-        lat, lon, exclude: 'current,minutely,alerts', units: searchParams,lang:searchParams
+        lat, lon, exclude: 'current,minutely,alerts', units: searchParams.units, lang:searchParams.lang
     }).then(formatForecastWeather);
     return {...formattedCurrentWeather, ...formattedForecastWeather};
 
